@@ -10,28 +10,28 @@ public class Loan {
     private final Date expiry;
     private CapitalStrategy capitalStrategy;
 
-    //term loan
-    public Loan(double commitment, int riskRating, Date maturity) {
-        this(commitment, 0.00, riskRating, maturity, null);
+    public static Loan createTermLoan(double commitment, int riskRating, Date maturity) {
+        return new Loan(null, commitment, 0.00, riskRating, maturity, null);
     }
 
-    //rctl
-    public Loan(double commitment, int riskRating, Date maturity, Date expiry) {
-        this(commitment, 0.00, riskRating, maturity, expiry);
-}
-
-    //rctl
-    public Loan(double commitment, double outstanding,
-                int riskRating, Date maturity, Date expiry) {
-        this(null, commitment, outstanding, riskRating, maturity, expiry);
+    static Loan createRevolverLoan(double commitment, int riskRating, Date expiry) {
+        return new Loan(null, commitment, 0.00, riskRating, null, expiry);
     }
 
-
-    public Loan(CapitalStrategy capitalStrategy, double commitment,
-                int riskRating, Date maturity, Date expiry) {
-        this(capitalStrategy, commitment, 0.00, riskRating, maturity, expiry);
+    static Loan createRctlLoan(double commitment, double outstanding, int riskRating, Date maturity, Date expiry) {
+        return new Loan(null, commitment, outstanding, riskRating, maturity, expiry);
     }
-    public Loan(CapitalStrategy capitalStrategy, double commitment,
+
+    static Loan createRctlLoan(CapitalStrategy captialStrategyRCTL, double commitment, int riskRating, Date maturity, Date expiry) {
+        return new Loan(captialStrategyRCTL, commitment, 0.00, riskRating, maturity, expiry);
+    }
+
+    public static Loan createTermLoan(CapitalStrategy riskAdjustedCapitalStrategy, double commitment, double outstanding, int riskRating, Date maturity) {
+        return new Loan(riskAdjustedCapitalStrategy, commitment,
+                outstanding, riskRating, maturity, null);
+    }
+
+    private Loan(CapitalStrategy capitalStrategy, double commitment,
                 double outstanding, int riskRating,
                 Date maturity, Date expiry) {
         this.commitment = commitment;
@@ -50,6 +50,10 @@ public class Loan {
                 this.capitalStrategy = new CapitalStrategyRCTL();
         }
     }
+
+
+
+
     public void makePayment(double payment) {
         outstanding -= payment;
     }

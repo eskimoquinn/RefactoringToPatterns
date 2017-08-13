@@ -19,6 +19,7 @@ public class CapitalCalculationTest {
     private CapitalStrategy riskAdjustedCapitalStrategy;
     private double outstanding;
     private Date expiry;
+    private CapitalStrategy captialStrategyRCTL;
 
     @Before
     public void setup(){
@@ -28,13 +29,13 @@ public class CapitalCalculationTest {
         riskAdjustedCapitalStrategy = new CapitalStrategyTermLoan();
         outstanding = 20.00;
         expiry = Date.from(LocalDate.of(2022,9,26).atStartOfDay().toInstant(ZoneOffset.UTC));
-
+        captialStrategyRCTL = new CapitalStrategyRCTL();
     }
 
     @Test
     public void testTermLoanNoPayments() throws Exception {
 
-        Loan termLoan = new Loan(commitment, riskRating, maturity);
+        Loan termLoan = Loan.createTermLoan(commitment, riskRating, maturity);
 
         assertThat(termLoan.getCommitment() , is(commitment));
         assertThat(termLoan.getRiskRating() , is(riskRating));
@@ -45,7 +46,7 @@ public class CapitalCalculationTest {
 
     @Test
     public void testTermLoanOnePayment() throws Exception {
-        Loan termLoan = new Loan(commitment, riskRating, maturity);
+        Loan termLoan = Loan.createTermLoan(commitment, riskRating, maturity);
         termLoan.setOutstanding(outstanding);
         termLoan.makePayment(3.00);
 
@@ -55,8 +56,8 @@ public class CapitalCalculationTest {
 
     @Test
     public void testTermLoanWithRiskAdjustedCapitalStrategy() {
-        Loan termLoan = new Loan(riskAdjustedCapitalStrategy, commitment,
-                outstanding, riskRating, maturity, null); //Null in a constructor, bad practice!
+        Loan termLoan = Loan.createTermLoan(riskAdjustedCapitalStrategy, commitment, outstanding, riskRating, maturity);
+        //Null in a constructor, bad practice!
 
         assertThat(termLoan.getCommitment() , is(commitment));
         assertThat(termLoan.getRiskRating() , is(riskRating));
@@ -67,7 +68,7 @@ public class CapitalCalculationTest {
 
     @Test
     public void testRevolver() throws Exception {
-        Loan revolverLoan = new Loan(commitment, outstanding, riskRating, null, expiry);
+        Loan revolverLoan = Loan.createRevolverLoan(commitment, riskRating, expiry);
 
         assertThat(revolverLoan.getCommitment(), is(commitment));
         assertThat(revolverLoan.getMaturity(), nullValue());
@@ -75,9 +76,19 @@ public class CapitalCalculationTest {
 
     @Test
     public void testRctl(){
-        Loan revolverLoan = new Loan(commitment, outstanding, riskRating, maturity, expiry);
+        Loan revolverLoan = Loan.createRctlLoan(commitment, outstanding, riskRating, maturity, expiry);
 
         assertThat(revolverLoan.getMaturity(), is(maturity));
         assertThat(revolverLoan.getExpiry(), is(expiry));
     }
+
+    @Test
+    public void testRctlWithCapitalStrategy(){
+        Loan revolverLoan = Loan.createRctlLoan(captialStrategyRCTL, commitment, riskRating, maturity, expiry);
+
+        assertThat(revolverLoan.getMaturity(), is(maturity));
+        assertThat(revolverLoan.getExpiry(), is(expiry));
+        assertThat(revolverLoan.getOutstanding(), is(0.00));
+    }
+
 }
