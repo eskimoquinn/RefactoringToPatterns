@@ -4,23 +4,29 @@ import java.util.Date;
 
 public class Loan {
     private final double commitment;
-    private final double outstanding;
+    private double outstanding;
     private final int riskRating;
     private final Date maturity;
     private final Date expiry;
     private CapitalStrategy capitalStrategy;
 
+    //term loan
     public Loan(double commitment, int riskRating, Date maturity) {
         this(commitment, 0.00, riskRating, maturity, null);
     }
 
+    //rctl
     public Loan(double commitment, int riskRating, Date maturity, Date expiry) {
         this(commitment, 0.00, riskRating, maturity, expiry);
-    }
+}
+
+    //rctl
     public Loan(double commitment, double outstanding,
                 int riskRating, Date maturity, Date expiry) {
         this(null, commitment, outstanding, riskRating, maturity, expiry);
     }
+
+
     public Loan(CapitalStrategy capitalStrategy, double commitment,
                 int riskRating, Date maturity, Date expiry) {
         this(capitalStrategy, commitment, 0.00, riskRating, maturity, expiry);
@@ -43,6 +49,9 @@ public class Loan {
             else
                 this.capitalStrategy = new CapitalStrategyRCTL();
         }
+    }
+    public void makePayment(double payment) {
+        outstanding -= payment;
     }
 
     public double getCommitment() {
@@ -73,4 +82,11 @@ public class Loan {
         this.capitalStrategy = capitalStrategy;
         return this;
     }
+
+    public Loan setOutstanding(double outstanding) {
+        this.outstanding = outstanding;
+        return this;
+    }
+
+
 }
