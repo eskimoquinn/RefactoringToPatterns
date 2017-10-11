@@ -15,3 +15,32 @@ Limitation
 
 Mechanics
 
+First: Find a catch-all constructor. If you do not have one,
+consider the Chain Constructors pattern
+
+1. Find a client that calls a constructor to create a kind
+of instance. Apply extract method. Now move the method to the
+class.
+
+2. Find all callers of the chosen constructor that create
+the same kind of instance and have them call the new creation
+method.
+
+3. If the constructor is chained to another constructor,
+make the new creation method call the chained constructor
+
+4. Rinse and Repeat
+
+5. If the catch-all constructor now has no external clients,
+make it private
+
+Example
+Banking. Consider Loan.java. Loan.java has many constructors.
+
+Term Loan = must be paid in full by its maturity date
+Revolver = credit, revolving credit - has a spending limit and an expiry date
+Revolving credit term loan = a revolver that transforms into a term limit when
+    revolver expires
+
+Uses a strategy to calculate payments for the loan.
+
