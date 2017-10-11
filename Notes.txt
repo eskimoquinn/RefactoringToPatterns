@@ -1,0 +1,17 @@
+Motivation:
+    - Constructors do not convey intent because they
+     must be named after a class.
+    - Particularly a problem when there are many constructors
+    in a class
+    - leads to dead constructors
+Solution
+    - static or non-static creation methods
+    - name the clearly expresses intent
+    - also may be necessary to extract a subclass
+Limitation
+    - Some classes are instantiated with new and some are not
+    Non-standard
+
+
+Mechanics
+
