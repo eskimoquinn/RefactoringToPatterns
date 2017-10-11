@@ -10,14 +10,35 @@ public class Loan {
     private final Date expiry;
     private CapitalStrategy capitalStrategy;
 
+
+    /*
+    These constructors make it hard to decide which constructor to use. They also obscure important business rules.
+    These types of classes also leads to dead constructors that are no longer used.
+
+    +  Communicates what kinds of instances are available better than constructors.
+    +  Bypasses constructor limitations, such as the inability to have two constructors with
+     the same number and type of arguments.
+     +  Makes it easier to find unused creation code.
+
+
+    Let's replace these constructors with intention-revealing Creation Methods
+
+    Potential Negatives:
+    - May introduce non-standard ways to create object. Must decide if its worth the tradeoff.
+     */
+
+    //A term loan is a loan that must be fully paid by its maturity date.
     public static Loan createTermLoan(double commitment, int riskRating, Date maturity) {
         return new Loan(null, commitment, 0.00, riskRating, maturity, null);
     }
 
+    //A revolver, which is like a credit card, is a loan that signifies “revolving credit”:
+    // you have a spending limit and an expiry date.
     static Loan createRevolverLoan(double commitment, int riskRating, Date expiry) {
         return new Loan(null, commitment, 0.00, riskRating, null, expiry);
     }
 
+    //A revolving credit term loan (RCTL) is a revolver that transforms into a term loan when the revolver expires
     static Loan createRctlLoan(double commitment, double outstanding, int riskRating, Date maturity, Date expiry) {
         return new Loan(null, commitment, outstanding, riskRating, maturity, expiry);
     }
@@ -31,6 +52,7 @@ public class Loan {
                 outstanding, riskRating, maturity, null);
     }
 
+    //Catch all constructor
     private Loan(CapitalStrategy capitalStrategy, double commitment,
                 double outstanding, int riskRating,
                 Date maturity, Date expiry) {
