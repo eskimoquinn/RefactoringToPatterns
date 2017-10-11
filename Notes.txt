@@ -44,3 +44,19 @@ Revolving credit term loan = a revolver that transforms into a term limit when
 
 Uses a strategy to calculate payments for the loan.
 
+The code makes little of the different loan types clear.
+I happen to know that an RCTL needs both an expiry date
+and a maturity date, so I know that to create an RCTL,
+I must call a constructor that lets me pass in both dates.
+Did you know that? Do you think the next programmer who
+reads this code will know it?
+
+If you call the first constructor, which takes three parameters,
+you’ll get back a term loan. But if you want a revolver,
+you’ll need to call one of the constructors that take two dates
+and then supply null for the maturity date.
+I wonder if all users of this code will know this?
+Or will they just have to learn by encountering some ugly defects?
+
+So step 1. find a client. I have written some tests to have a
+client. Also then I can easily refactor the code.

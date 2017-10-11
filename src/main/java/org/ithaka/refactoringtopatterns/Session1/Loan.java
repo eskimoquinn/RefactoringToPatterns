@@ -11,20 +11,20 @@ public class Loan {
     private Date expiry;
     private CapitalStrategy capitalStrategy;
 
-    public Loan(double commitment, int riskRating, Date maturity) {
-        this(commitment, 0.00, riskRating, maturity, null);
-    }
-
     public Loan(double commitment, int riskRating, Date maturity, Date expiry) {
         this(commitment, 0.00, riskRating, maturity, expiry);
     }
 
-    public Loan(double commitment, double outstanding, int riskRating, Date maturity, Date expiry) {
-        this(null, commitment, outstanding, riskRating, maturity, expiry);
-    }
-
     public Loan(CapitalStrategy capitalStrategy, double commitment, int riskRating, Date maturity, Date expiry) {
         this(capitalStrategy, commitment, 0.00, riskRating, maturity, expiry);
+    }
+
+    public Loan(double commitment, int riskRating, Date maturity) {
+        this(commitment, 0.00, riskRating, maturity, null);
+    }
+
+    public Loan(double commitment, double outstanding, int riskRating, Date maturity, Date expiry) {
+        this(null, commitment, outstanding, riskRating, maturity, expiry);
     }
 
     //catch-all
@@ -48,5 +48,36 @@ public class Loan {
         }
     }
 
+    public double getCommitment() {
+        return commitment;
+    }
 
+    public double getOutstanding() {
+        return outstanding;
+    }
+
+    public Loan setOutstanding(double outstanding) {
+        this.outstanding = outstanding;
+        return this;
+    }
+
+    public int getRiskRating() {
+        return riskRating;
+    }
+
+    public Date getMaturity() {
+        return maturity;
+    }
+
+
+    public Date getExpiry() {
+        return expiry;
+    }
+
+
+    public void makePayment(double payment) {
+        if (outstanding != 0.00){
+            outstanding -= payment;
+        }
+    }
 }
