@@ -60,3 +60,14 @@ Or will they just have to learn by encountering some ugly defects?
 
 So step 1. find a client. I have written some tests to have a
 client. Also then I can easily refactor the code.
+
+There are two tests that create a term loan. So I know that I want a creation
+method for a term loan. So I extract a static method and make it public.
+Then I move that method to the loan class. Then if the only usage of the constructor
+is the static creation method, inline and delete. Run the tests.
+
+Repeat. Extract method, move method, inline.
+
+At the end, we should be left with only one constructor. Make it private.
+
+
